@@ -15,7 +15,7 @@ if (!class_exists ('checkHack')) {
 	require_once( JPATH_PLUGINS . '/k2store/payment_trangellmellat/trangell_inputcheck.php');
 }
 
-class plgK2StorePayment_trangellzarinpal extends K2StorePaymentPlugin
+class plgK2StorePayment_trangellmellat extends K2StorePaymentPlugin
 {
     var $_element    = 'payment_trangellmellat';
 
@@ -166,7 +166,7 @@ class plgK2StorePayment_trangellzarinpal extends K2StorePaymentPlugin
 								}
 								else {
 									$msg= $this->getGateMsg($resultStatus); 
-									$this->saveStatus($msg,3,$customer_note,'nonok',null,$orderpayment);
+									$this->saveStatus($msg,3,$customer_note,'nonok',null,$orderpayment,$CardNumber);
 									$link = JRoute::_(JURI::root(). "index.php?option=com_k2store" );
 									$app->redirect($link, '<h2>'.$msg.'</h2>', $msgType='Error'); 
 								}
@@ -174,7 +174,7 @@ class plgK2StorePayment_trangellzarinpal extends K2StorePaymentPlugin
 						}
 						catch(\SoapFault $e)  {
 							$msg= $this->getGateMsg('error'); 
-							$this->saveStatus($msg,3,$customer_note,'nonok',null,$orderpayment);
+							$this->saveStatus($msg,3,$customer_note,'nonok',null,$orderpayment,$CardNumber);
 							$link = JRoute::_(JURI::root(). "index.php?option=com_k2store" );
 							$app->redirect($link, '<h2>'.$msg.'</h2>', $msgType='Error'); 
 						}
@@ -182,7 +182,7 @@ class plgK2StorePayment_trangellzarinpal extends K2StorePaymentPlugin
 				}
 				else {
 					$msg= $this->getGateMsg('hck2'); 
-					$this->saveStatus($msg,3,$customer_note,'nonok',null,$orderpayment);
+					$this->saveStatus($msg,3,$customer_note,'nonok',null,$orderpayment,$CardNumber);
 					$link = JRoute::_(JURI::root(). "index.php?option=com_k2store" );
 					$app->redirect($link, '<h2>'.$msg.'</h2>' , $msgType='Error'); 
 				}
