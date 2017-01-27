@@ -21,6 +21,7 @@
 	</config>
 	<files>
 		<filename plugin="payment_trangellmellat">payment_trangellmellat.php</filename>
+		<filename plugin="payment_trangellmellat">trangell_inputcheck.php</filename>
 		<filename>index.html</filename>
 		<folder>payment_trangellmellat</folder>
 	</files>

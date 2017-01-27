@@ -92,8 +92,7 @@ class plgK2StorePayment_trangellmellat extends K2StorePaymentPlugin
 					$app->redirect($link, '<h2>'.$msg.'</h2>', $msgType='Error'); 
 				}
 				else { // if success
-					$refId = $response[1];
-					$vars->trangellmellat =  $refId;
+					$vars->trangellmellat =  $response[1];
 					$html = $this->_getLayout('prepayment', $vars);
 					return $html;
 				}
@@ -113,8 +112,10 @@ class plgK2StorePayment_trangellmellat extends K2StorePaymentPlugin
 		$orderpayment_id = $jinput->get->get('orderpayment_id', '0', 'INT');
         JTable::addIncludePath( JPATH_ADMINISTRATOR.'/components/com_k2store/tables' );
         $orderpayment = JTable::getInstance('Orders', 'Table');
-		$customer_note = $orderpayment->customer_note;
 		//==========================================================================
+		$melatterminalId = $this->params->get('melatterminalId', '');
+		$melatuser = $this->params->get('melatuser', '');
+		$melatpass = $this->params->get('melatpass', '');
 		$ResCode = $jinput->post->get('ResCode', '1', 'INT'); 
 		$SaleOrderId = $jinput->post->get('SaleOrderId', '1', 'INT'); 
 		$SaleReferenceId = $jinput->post->get('SaleReferenceId', '1', 'INT'); 
@@ -125,7 +126,8 @@ class plgK2StorePayment_trangellmellat extends K2StorePaymentPlugin
 		if (checkHack::strip($CardNumber) != $CardNumber )
 			$CardNumber = "illegal";
 
-	    if ($orderpayment->load( $orderpayment_id ) != null){
+	    if ($orderpayment->load( $orderpayment_id )){
+			$customer_note = $orderpayment->customer_note;
 			if($orderpayment->id == $orderpayment_id) {
 				if (
 					checkHack::checkNum($ResCode) &&
@@ -140,9 +142,9 @@ class plgK2StorePayment_trangellmellat extends K2StorePaymentPlugin
 					}
 					else {
 						$fields = array(
-							'terminalId' => $this->data['melatterminalId'],
-							'userName' => $this->data['melatuser'],
-							'userPassword' => $this->data['melatpass'],
+							'terminalId' => $melatterminalId,
+							'userName' => $melatuser,
+							'userPassword' => $melatpass,
 							'orderId' => $SaleOrderId, 
 							'saleOrderId' =>  $SaleOrderId, 
 							'saleReferenceId' => $SaleReferenceId
@@ -160,12 +162,12 @@ class plgK2StorePayment_trangellmellat extends K2StorePaymentPlugin
 							else {	
 								$response = $soap->bpSettleRequest($fields);
 								if ($response->return == '0' || $response->return == '45') {
-									$msg= $this->getGateMsg($resultStatus); 
-									$this->saveStatus($msg,1,$customer_note,'ok',$result->RefID,$orderpayment,$CardNumber);
+									$msg= $this->getGateMsg($response->return); 
+									$this->saveStatus($msg,1,$customer_note,'ok',$SaleReferenceId,$orderpayment,$CardNumber);
 									$app->enqueueMessage($SaleReferenceId . ' کد پیگیری شما', 'message');	
 								}
 								else {
-									$msg= $this->getGateMsg($resultStatus); 
+									$msg= $this->getGateMsg($response->return); 
 									$this->saveStatus($msg,3,$customer_note,'nonok',null,$orderpayment,$CardNumber);
 									$link = JRoute::_(JURI::root(). "index.php?option=com_k2store" );
 									$app->redirect($link, '<h2>'.$msg.'</h2>', $msgType='Error'); 
@@ -227,8 +229,11 @@ class plgK2StorePayment_trangellmellat extends K2StorePaymentPlugin
 		$html .='<strong>'.JText::_('K2STORE_BANK_TRANSFER_INSTRUCTIONS').'</strong>';
 		$html .='<br />';
 		if (isset($trackingCode)){
+			$html .= '<br />';
 			$html .= $trackingCode .'شماره پیگری ';
+			$html .= '<br />';
 			$html .= $CardNumber .' شماره کارت ';
+			$html .= '<br />';
 		}
 		$html .='<br />' . $msg;
 		$orderpayment->customer_note =$customer_note.$html;

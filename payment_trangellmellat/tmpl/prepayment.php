@@ -10,7 +10,7 @@
 
 defined('_JEXEC') or die('Restricted access'); ?>
 
-<form action="https://bpm.shaparak.ir/pgwchannel/startpay.mellat" method="post" name="adminForm" enctype="multipart/form-data">
+<form action="https://bpm.shaparak.ir/pgwchannel/startpay.mellat" method="post" name="adminForm" target="_self">
 	<p><?php echo 'درگاه بانک ملت' ?></p>
 	<input type="submit" class="k2store_cart_button btn btn-primary" value="<?php echo JText::_($vars->button_text); ?>" />
     <input type='hidden' name='RefId' value='<?php echo @$vars->trangellmellat; ?>'>
