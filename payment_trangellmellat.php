@@ -112,6 +112,9 @@ class plgK2StorePayment_trangellmellat extends K2StorePaymentPlugin
 		$orderpayment_id = $jinput->get->get('orderpayment_id', '0', 'INT');
         JTable::addIncludePath( JPATH_ADMINISTRATOR.'/components/com_k2store/tables' );
         $orderpayment = JTable::getInstance('Orders', 'Table');
+        require_once (JPATH_SITE.'/components/com_k2store/models/address.php');
+    	$address_model = new K2StoreModelAddress();
+		//$address_model->getShippingAddress()->phone_2
 		//==========================================================================
 		$melatterminalId = $this->params->get('melatterminalId', '');
 		$melatuser = $this->params->get('melatuser', '');
